@@ -1,8 +1,8 @@
-# AI-Assisted To-Do List App
+# Work-manager
 
 ## Overview
 
-The AI-Assisted To-Do List App is a modern task management application designed to help users efficiently manage their tasks with the support of artificial intelligence. The app allows users to add, track, and organize their tasks, and provides AI-driven insights and suggestions to enhance productivity.
+The Work-manager App is a modern task management application designed to help users efficiently manage their tasks with the support of artificial intelligence. The app allows users to add, track, and organize their tasks, and provides AI-driven insights and suggestions to enhance productivity.
 
 ## Features
 
