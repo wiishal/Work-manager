@@ -16,4 +16,4 @@ The Work-manager App is a modern task management application designed to help us
 ## Tech Stack
 - **Frontend:** React, Tailwind
 - **Backend:** Hono (cloudfare workers)
-  - **https://github.com/wiishal/todo-backend-hono**
+  - **https://github.com/wiishal/Work-manager-backend**
