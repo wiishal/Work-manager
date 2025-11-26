@@ -8,7 +8,7 @@ A **lightweight, high-performance** Todo backend built using **Hono, TypeScript,
 ✅ **Prisma ORM** for efficient database management  
 ✅ **PostgreSQL** as the database for scalability & performance  
 ✅ **JWT Authentication** for secure access  
-✅ **Cloudflare Workers Integration** (if applicable)  
+✅ **Cloudflare Workers Integration** 
 
 ## ⚙️ Tech Stack  
 
