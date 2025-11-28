@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import "../style/Today.css";
 import "../style/RenderTaskComp.css"
 import "../style/EditTaskComp.css"
@@ -10,7 +9,6 @@ import RenderTask from "../componant/tasks/RenderTask";
 import AddTask from "../componant/tasks/AddTask";
 
 function Today() {
-  const [Task, setTask] = useState([]);
   const [render,setRender] = useState(false)
   const [addTask, setAddTask] = useState(false);
   const [editTaskDiv, seteditTaskDiv] = useState(null);

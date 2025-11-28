@@ -4,9 +4,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AddSpendCard from "../componant/AddSpendCard";
 function Expenses() {
-  useEffect(() => {
-   fetchSpends();
-  }, []);
+
   function fetchSpends(){
      axios.get("http://localhost:3000/api/expenses").then((res) => {
        console.log(res.data);
@@ -14,6 +12,9 @@ function Expenses() {
        setCards(res.data.expenses);
      });
   }   
+    useEffect(() => {
+   fetchSpends();
+  }, []);
   const [cards, setCards] = useState([]);
   
   
@@ -23,7 +24,7 @@ function Expenses() {
 
       <AddSpendCard fetchSpends={fetchSpends}></AddSpendCard>
       <div className="expenses-cardDiv">
-        {cards.map((item, i) => (
+        {cards.map((item) => (
           <ExpensesCard item={item} id={item.id} />
         ))}
       </div>

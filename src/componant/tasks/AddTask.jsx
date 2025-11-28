@@ -1,5 +1,5 @@
 import SelectTags from "../tags/SelectTags";
-import { useState,useEffect } from "react";
+import { useState } from "react";
 import { addTask } from "../../services/taskService";
 import List from "../list/List";
 import { useFormatDate } from "../../hooks/useFormateDate";

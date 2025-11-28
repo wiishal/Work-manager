@@ -2,7 +2,7 @@ import "../style/Login.css"
 import "../style/landingpage.css"
 import { useNavigate } from "react-router";
 
-export default function LandingPage({ setLogged, setUserName }) {
+export default function LandingPage() {
  const navigate = useNavigate();
   return (
     <div className="landing-main">
@@ -10,7 +10,7 @@ export default function LandingPage({ setLogged, setUserName }) {
         {/* landing bar */}
         <div className="landing-bar">
           <div className="landing-logo">
-            <p className="landing-name">TODO</p>
+            <p className="landing-name">MANAGER</p>
           </div>
           <div className="landing-login">
             <button
@@ -35,7 +35,7 @@ export default function LandingPage({ setLogged, setUserName }) {
           </div>
         </div>
         <div className="landing-footer">
-          <a href="https://github.com/wiishal/AI-Assisted-Todo-App">
+          <a href="https://github.com/wiishal/Work-manager">
             <img
               src="https://res.cloudinary.com/ddg85vpnk/image/upload/v1739965625/github_hqeyh9.png"
               width={20}

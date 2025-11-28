@@ -5,16 +5,13 @@ import { Await } from "react-router";
 import { getAllTasks } from "../services/taskService";
 import { useFormatDate } from "../hooks/useFormateDate";
 
-function Upcoming({ navCount }) {
+function Upcoming() {
  const { formatDate, formatDateTomorrow } = useFormatDate();
-  const [Tasks, setTasks] = useState([]);
-  const [TaskLength, setTaskLenght] = useState(0);
   const [groupedTasks, setGroupedTasks] = useState({
     today: [],
     tomorrow: [],
     other: [],
   });
-  const [isdiplayTask, setIsDisplayTask] = useState(null);
 
   useEffect(() => {
     if (formatDate && formatDateTomorrow) {

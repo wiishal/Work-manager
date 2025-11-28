@@ -11,7 +11,7 @@ import TagDetails from "./componant/tags/TagDetails.jsx";
 import ListDetails from "./componant/list/ListDetails.jsx";
 
 function App({ user }) {
- 
+
   return (
     <BrowserRouter>
       <div className="main">
