@@ -8,7 +8,7 @@ export async function getAllTask(
   user: number
 ): Promise<tasksDBConstant[] | boolean> {
  
-  const prisma = getPrisma(c.env.DATABASE_URL);
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
   try {
     const tasks = await prisma.task.findMany({
       where: {
@@ -19,14 +19,13 @@ export async function getAllTask(
     taskCount = tasks.length
     return tasks || false;
   } catch (error) {
-    console.log("error while fetching task");
     return false;
   }
 }
 
 export async function addTask(c:Context,task:tasksConstant):Promise<tasksDBConstant | boolean>{
    if (taskCount > 15) return false;
-  const prisma = getPrisma(c.env.DATABASE_URL)
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL)
  
   try {
     if(!task) return false
@@ -44,7 +43,7 @@ export async function addTask(c:Context,task:tasksConstant):Promise<tasksDBConst
 }
 
 export async function getTask(c:Context,id:number) {
-  const prisma = getPrisma(c.env.DATABASE_URL)
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL)
   try {
     const task = await prisma.task.findUnique({
       where:{
@@ -57,13 +56,12 @@ export async function getTask(c:Context,id:number) {
     }
     return task
   } catch (error) {
-    console.log("error while getting task from DB")
     return false    
   }
 }
 
 export async function toggleTask(c:Context,id:number,user:number){
-  const prisma = getPrisma(c.env.DATABASE_URL)
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL)
   try {
     const existingTask = await prisma.task.findUnique({
       where: {
@@ -87,7 +85,7 @@ export async function toggleTask(c:Context,id:number,user:number){
 }
 
 export async function updateTask(c:Context,task:tasksDBConstant) {
-  const prisma = getPrisma(c.env.DATABASE_URL)
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL)
   try {
     const updatedTask = await prisma.task.update({
       where: { id: task.id },
@@ -105,7 +103,7 @@ export async function updateTask(c:Context,task:tasksDBConstant) {
 
 export async function deleteTask(c: Context, currid: number) {
   
-  const prisma = getPrisma(c.env.DATABASE_URL);
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
   try {
     const task = await prisma.task.delete({
       where: {

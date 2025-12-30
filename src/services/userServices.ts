@@ -4,21 +4,20 @@ import { sign, verify } from "hono/jwt";
 
 export const checkUser = async (c: any,user_name:string)=>{
   try {
-    const prisma = getPrisma(c.env.DATABASE_URL);
+    const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
 
     const user = await prisma.user.findUnique({
       where: {
         username: user_name,
       },
     });
-
+    console.log(user,"check uer")
      if(user){
       return {status:true,user}
      }
      return {status:false}
 
   } catch (error) {
-    console.log("error while checking creadential")
     return false
   }
     
@@ -26,7 +25,7 @@ export const checkUser = async (c: any,user_name:string)=>{
 
 export const createUser = async (c: any, userCredentials: userCredentials) => {
   try {
-    const prisma = getPrisma(c.env.DATABASE_URL);
+    const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
 
     const user = await prisma.user.create({
       data: {
@@ -42,7 +41,6 @@ export const createUser = async (c: any, userCredentials: userCredentials) => {
 
   } catch (error) {
 
-    console.log("error while creating new user")
     return false
   }
 };
@@ -57,7 +55,6 @@ export const createUser = async (c: any, userCredentials: userCredentials) => {
       const token = await sign(payload,c.env.JWT_SECRET)
       return token || false
     } catch (error) {
-      console.log("error while signing token")
       return false
     }
   }
@@ -70,7 +67,6 @@ export const verifyJWT = async (
     const decode = await verify(userToken, c.env.JWT_SECRET);
     return decode || false;
   } catch (error) {
-    console.log("error while signing token");
     return false;
   }
 };

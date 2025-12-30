@@ -12,7 +12,6 @@ const taskRoute = new Hono<{
 
 taskRoute.get("/allTasks", async (c) => {
   const user = c.get("userId");
-  console.log(user)
   const response = await getAllTask(c, user);
   if (response) {
     c.status(200);
@@ -27,7 +26,6 @@ taskRoute.post("/addTask", async (c) => {
 
   const user = c.get("userId");
   const body = await c.req.json()
-  console.log(body)
   const {success} = taskInputs.safeParse(body)
   if(!success){
     c.status(411)
@@ -46,7 +44,6 @@ taskRoute.post("/addTask", async (c) => {
 
 taskRoute.get("/getTask/:id", async (c) => {
    const id = c.req.param('id');
-   console.log("id",id)
     
    const currID = Number(id)
    if(typeof currID !== 'number'){
