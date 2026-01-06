@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { signUp } from "../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-export default function Signup({ setLogged, setUserName }) {
+export default function Signup() {
   const [user, setUser] = useState({ username: "", password: "" });
-   const [isProcessing, setIsProcessing] = useState(false);
+  const { setUser: LoginUser } = useAuth();
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
   function setUserDetails(e, field) {
@@ -20,24 +22,24 @@ export default function Signup({ setLogged, setUserName }) {
       alert("Check inputs");
       return;
     }
-      setIsProcessing(true);
+    setIsProcessing(true);
     try {
       const response = await signUp(user);
-      if (response) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        setUserName(response.data.user);
-        setLogged(true);
-        navigate("/");
-      }
+      const token = response.token;
+      localStorage.setItem("token", token);
+      LoginUser(response.user);
+      navigate("/");
     } catch (error) {
       console.error("Error during login:", error);
+      setIsProcessing(false);
+    } finally {
+      setIsProcessing(false);
     }
   }
-    function checkInput(data) {
-      const isEmpty = Object.values(data).some((detail) => detail === "");
-      return isEmpty;
-    }
+  function checkInput(data) {
+    const isEmpty = Object.values(data).some((detail) => detail === "");
+    return isEmpty;
+  }
   return (
     <div class="login-main">
       <div className="login-logo">

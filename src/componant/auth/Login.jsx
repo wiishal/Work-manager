@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { login } from "../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Login({ setLogged, setUserName }) {
   const [user, setUser] = useState({ username: "", password: "" });
+  const { setUser: setLogin } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   function setUserDetails(e, field) {
@@ -15,30 +18,36 @@ export default function Login({ setLogged, setUserName }) {
   }
 
   async function handleLoginClick() {
-     const isInputEmpty = checkInput(user);
-     if (isInputEmpty) {
-       alert("Check inputs");
-       return;
-     }
-    setIsProcessing(true)
+    const isInputEmpty = checkInput(user);
+    if (isInputEmpty) {
+      alert("Check inputs");
+      return;
+    }
+
+    setIsProcessing(true);
+
     try {
       const response = await login(user);
-      setIsProcessing(false)
-      if (response) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        setUserName(response.data.user)
-        setLogged(true);
-        navigate("/");
-      }
+
+      const token = response.token;
+      localStorage.setItem("token", token);
+      setLogin(response.user);
+      navigate("/");
     } catch (error) {
       console.error("Error during login:", error);
-      setIsProcessing(false)
+      if (error.response.status == 403) {
+        setError("Invalid username and password");
+      } else {
+        setError("Internal Server Error!");
+      }
+      setIsProcessing(false);
+    } finally {
+      setIsProcessing(false);
     }
   }
-  function checkInput(data){
+  function checkInput(data) {
     const isEmpty = Object.values(data).some((detail) => detail === "");
-    return isEmpty
+    return isEmpty;
   }
 
   return (
@@ -56,6 +65,7 @@ export default function Login({ setLogged, setUserName }) {
         </div>
 
         <div className="login-div">
+          {error && <div>{error}</div>}
           <div className="userInput-div">
             <label className="username-lable" htmlFor="username">
               User Name
