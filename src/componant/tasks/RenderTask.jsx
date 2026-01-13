@@ -4,6 +4,7 @@ import {
   toggleStatus,
   deleteTask,
 } from "../../services/taskService";
+import { checkBoxChecked, checkBoxEmpty } from "../../assets/assets";
 export default function RenderTask({
   render,
   setAddTask,
@@ -30,7 +31,7 @@ export default function RenderTask({
   };
 
   async function deletetask(id) {
-    console.log(id,"delete task req")
+    console.log(id, "delete task req");
     if (!id) return false;
     const res = await deleteTask(id);
     if (!res) {
@@ -41,7 +42,7 @@ export default function RenderTask({
     setRender((prev) => !prev);
   }
   function handleEditTask(Id) {
-    seteditTaskDiv(null)
+    seteditTaskDiv(null);
     seteditTaskDiv(Id);
     if (addTask) {
       setAddTask(false);
@@ -110,11 +111,7 @@ function BoxImage({ task, setTask, i }) {
     <img
       style={{ cursor: "pointer" }}
       onClick={() => checkTask(task.id, i)}
-      src={
-        task.complete
-          ? "https://res.cloudinary.com/ddg85vpnk/image/upload/v1739965624/check-box-with-check-sign_iqn92n.png"
-          : "https://res.cloudinary.com/ddg85vpnk/image/upload/v1739965626/check-box-empty_a4aomp.png"
-      }
+      src={task.complete ? `${checkBoxChecked}` : `${checkBoxEmpty}`}
       width={15}
       height={15}
       alt="checkboxpng"

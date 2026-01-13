@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getSubTasks } from "../services/subtaskService";
+import { getSubTasks, toggleSubtask } from "../services/subtaskService";
 import ShowError from "./ShowError";
 import {
   addSubTask,
@@ -15,6 +15,7 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
   const [error, setError] = useState(null);
   const [isbtnDisable, setIsBtnDisable] = useState(false);
   const [subTaskSuggestions, setSubTaskSuggestions] = useState([]);
+  console.log(subTasks, "subtasks");
 
   const getAssistanceSubTask = async () => {
     setIsBtnDisable(true);
@@ -61,7 +62,7 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
       const res = await addSubTask(subtaskInput, TaskId);
       setSubTasks((prev) => [...prev, res.subtask]);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setError("something went Wrong!");
     } finally {
       setSubTaskInput("");
@@ -83,24 +84,14 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
       setSubTaskSuggestions(filterSuggestions);
       setSubTasks((prev) => [...prev, res.subtask]);
     } catch (error) {
-            console.log(error)
+      console.log(error);
 
       setError("something went Wrong!");
     } finally {
       setSubTaskInput("");
     }
   };
-  const deleteSubTaskFunc = async (id, i) => {
-    try {
-      const res = await deleteSubTask(id);
-      const filterSubtask = subTasks.filter((_, index) => index != i);
-      setSubTasks(filterSubtask);
-    } catch (error) {
-      setError("something went Wrong! while deleting subtask");
-      console.log("error", error);
-    } finally {
-    }
-  };
+
   useEffect(() => {
     setSubTasks([]);
     fetchSubtask();
@@ -109,7 +100,9 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
   return (
     <div className="addsubTask">
       <h3>Sub Task</h3>
+
       {error && <ShowError error={error} closeErrorPopUp={setError} />}
+
       <div>
         <input
           className="baseInputClass"
@@ -119,9 +112,11 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
           name=""
           id=""
         />
+
         <button className="baseBtnClass" onClick={() => addSubTaskFunc()}>
           Add
         </button>
+
         <button
           className="baseBtnClass"
           onClick={() => {
@@ -132,44 +127,24 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
         >
           Assist
         </button>
+
         {isbtnDisable && <div className="spinner"></div>}
       </div>
+
       {processing && <div className="spinner" />}
+
       <div className="subtaskRenderDiv">
         {subTasks.length > 0 &&
-          subTasks.map((task, i) => (
-            <div className="subtaskRender">
-              {!task.complete ? (
-                <img
-                  onClick={() => checkSubTask(Task.taskId, i)}
-                  src={checkBoxEmpty}
-                  alt=""
-                  width={14}
-                  height={14}
-                />
-              ) : (
-                <img
-                  onClick={() => checkSubTask(Task.taskId, i)}
-                  src={checkBoxChecked}
-                  alt=""
-                  width={14}
-                  height={14}
-                />
-              )}
-
-              <p key={i}>{task.detail}</p>
-              <img
-                onClick={() => {
-                  deleteSubTaskFunc(task.id, i);
-                }}
-                src={deletePng}
-                alt=""
-                width={10}
-                height={10}
-              />
-            </div>
+          subTasks.map((subTask, i) => (
+            <RenderSubTask
+              subTask={subTask}
+              i={i}
+              subTasks={subTasks}
+              setSubTasks={setSubTasks}
+            />
           ))}
       </div>
+
       <div className="subtaskSuggestionRenderDiv">
         {subTaskSuggestions.length > 0 &&
           subTaskSuggestions.map((item, i) => (
@@ -181,7 +156,87 @@ function AddSubTask({ TaskId, taskTitle, taskDescription }) {
             </p>
           ))}
       </div>
+      {subTaskSuggestions.length > 0 && (
+        <button
+          className="baseBtnClass"
+          onClick={() => {
+            setSubTaskSuggestions([]);
+          }}
+        >
+          clear
+        </button>
+      )}
     </div>
+  );
+}
+function RenderSubTask({ subTask, i, subTasks, setSubTasks }) {
+  const [processing, setProcessing] = useState(false);
+
+  const deleteSubTaskFunc = async (id, i) => {
+    try {
+      setProcessing(true);
+      const res = await deleteSubTask(id);
+      const filterSubtask = subTasks.filter((_, index) => index != i);
+      setSubTasks(filterSubtask);
+      setProcessing(false);
+    } catch (error) {
+      setError("something went Wrong! while deleting subtask");
+      console.log("error", error);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  return (
+    <div className="subtaskRender">
+      <BoxImage subTask={subTask} setSubTasks={setSubTasks} />
+      <p key={i}>{subTask.detail}</p>
+      {processing ? (
+        <div className="spinner"></div>
+      ) : (
+        <img
+          onClick={() => {
+            deleteSubTaskFunc(subTask.id, i);
+          }}
+          src={deletePng}
+          alt=""
+          width={15}
+          height={15}
+        />
+      )}
+    </div>
+  );
+}
+function BoxImage({ subTask, setSubTasks }) {
+  const [processing, setProcessing] = useState(false);
+  const checkSubTaskfunc = async (subtaskId) => {
+    try {
+      setProcessing(true);
+      const res = await toggleSubtask(subtaskId);
+      setSubTasks((prev) => {
+        return prev.map((subtask) =>
+          subtask.id == subtaskId
+            ? { ...subtask, complete: res.completeStatus }
+            : subtask
+        );
+      });
+    } catch (error) {
+      console.log("error duringing toggling subtask", error);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  if (processing) return <div className="spinner"></div>;
+
+  return (
+    <img
+      onClick={() => checkSubTaskfunc(subTask.id)}
+      src={subTask.complete ? `${checkBoxChecked}` : `${checkBoxEmpty}`}
+      alt=""
+      width={14}
+      height={14}
+    />
   );
 }
 

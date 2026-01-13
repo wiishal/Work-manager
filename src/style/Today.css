@@ -27,32 +27,31 @@
 }
 
 .styled-button {
-  background-color: #3333e5; /* Green background */
-  border: none; /* Remove border */
-  color: white; /* White text */
-  padding: 0.61rem 1rem; /* Some padding */
-  text-align: center; /* Centered text */
-  text-decoration: none; /* Remove underline */
-  display: inline-block; /* Make the container element */
-  font-size: 0.75em; /* Increase font size */
-  margin: 4px 2px; /* Some margin */
-  cursor: pointer; /* Pointer/hand icon on hover */
-  border-radius: 10px; /* Rounded corners */
-  transition: background-color 0.3s ease; /* Smooth transition */
+  background-color: #3333e5;
+  border: none; 
+  color: white; 
+  padding: 0.61rem 1rem; 
+  text-align: center; 
+  text-decoration: none; 
+  display: inline-block; 
+  font-size: 0.75em; 
+  margin: 4px 2px; 
+  cursor: pointer; 
+  border-radius: 10px; 
+  transition: background-color 0.3s ease; 
 }
 
 .styled-button:hover {
-  background-color: #45a049; /* Darker green on hover */
+  background-color: #45a049; 
 }
 
 .inputDiv-title {
   margin-bottom: 1rem;
 }
 .listSelect-div {
-  /* border: 2px solid rgb(105, 105, 105); */
+  
   display: flex;
   align-items: center;
-  /* padding: 1em 0em; */
 }
 .listSelect-title{
   color: rgb(117, 117, 117);
