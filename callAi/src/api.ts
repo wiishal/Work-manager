@@ -8,7 +8,6 @@ import {
 import { extractJSON } from "./utils/extractJson";
 dotenv.config();
 const apiRouter = Router();
-console.log(process.env.LLM_BASE_URL);
 
 apiRouter.post("/subtaskAssistance", async (req, res) => {
   try {
@@ -43,13 +42,11 @@ apiRouter.post("/subtaskAssistance", async (req, res) => {
     );
 
     const reply = response.data.choices[0].message.content;
-    // console.log("RAW:", reply);
 
     const cleaned = extractJSON(reply);
 
     try {
       const data = JSON.parse(cleaned);
-      console.log("PARSED:", data);
       res.json(data.subtasks);
     } catch {
       console.error("Failed to parse AI JSON");
@@ -92,11 +89,9 @@ apiRouter.post("/calculateSpendAssistance", async (req, res) => {
         i.amount > 0
     );
 
-    console.log(items, " filterd items");
     const result = items.reduce((sum, item) => {
       return sum + item.amount;
     }, 0);
-    console.log("result of spends :", result);
     res.json({  result });
   } catch (err) {
     console.error(err);

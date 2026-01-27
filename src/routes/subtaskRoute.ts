@@ -11,6 +11,7 @@ import {
   taskDetailsInputs,
 } from "../validation/subtasks";
 import { subTaskAssistance } from "../services/aiService";
+import { ErrorCodes, errorMessages } from "../constants/errorCodes";
 
 const subtaskRoute = new Hono<{
   Bindings: {
@@ -24,7 +25,7 @@ subtaskRoute.post("/", async (c) => {
   const subtasks = await getSubtasks(c, body.taskId);
   if (!subtasks) {
     c.status(404);
-    return c.json({ message: "subtasks not found" });
+    return c.json({code: ErrorCodes.FAILED_FETCHING_SUBTASKS, message: errorMessages.FAILED_FETCHING_SUBTASKS });
   }
   c.status(200);
   return c.json({ message: "get subtask successfully", subtasks: subtasks });
@@ -32,17 +33,16 @@ subtaskRoute.post("/", async (c) => {
 
 subtaskRoute.post("/addSubTask", async (c) => {
   const body = await c.req.json();
-  console.log(body);
   const { success } = subtaskInputs.safeParse(body.subTask);
 
   if (!success) {
     c.status(403);
-    return c.json({ message: "invalide subtask" });
+    return c.json({code: ErrorCodes.INVALID_INPUTS, message: errorMessages.INVALID_INPUTS });
   }
   const createdSubtask = await addSubTask(c, body.subTask);
   if (!createdSubtask) {
     c.status(501);
-    return c.json({ message: "Error during adding subtask" });
+    return c.json({code: ErrorCodes.FAILED_DURING_PROCESS, message: errorMessages.FAILED_DURING_PROCESS });
   }
   c.status(200);
   return c.json({
@@ -58,7 +58,7 @@ subtaskRoute.post("/toggleSubtask", async (c) => {
   const updatedsubTask = await tooggleSubTask(c, body.id);
   if (!updatedsubTask) {
     c.status(404);
-    return c.json({ message: "task not found" });
+    return c.json({code: ErrorCodes.SUBTASK_NOT_FOUND, message: errorMessages.SUBTASK_NOT_FOUND });
   }
   c.status(200);
   return c.json({
@@ -75,7 +75,7 @@ subtaskRoute.delete("/deleteSubTask/:id", async (c) => {
   const res = await deleteSubTask(c, currId);
   if (!res) {
     c.status(403);
-    return c.json({ message: "error while deleting" });
+    return c.json({code: ErrorCodes.FAILED_DURING_PROCESS, message: errorMessages.FAILED_DURING_PROCESS });
   }
 
   c.status(200);
@@ -89,19 +89,19 @@ subtaskRoute.post("/assistance", async (c) => {
 
   if (!success) {
     c.status(403);
-    return c.json({ message: "error while assistance" });
+    return c.json({code: ErrorCodes.INVALID_INPUTS, message: errorMessages.INVALID_INPUTS });
   }
   const response = await subTaskAssistance(c, body.taskDetails);
   if (!response) {
     c.status(403);
-    return c.json({ message: "error while assistance" });
+    return c.json({code: ErrorCodes.FAILED_DURING_ASSISTANCE, message: errorMessages.FAILED_DURING_ASSISTANCE });
   }
   const { success: isSafeParsed } =
     subtaskAssistanceAiResponse.safeParse(response);
 
   if (!isSafeParsed) {
     c.status(403);
-    return c.json({ message: "error while assistance" });
+    return c.json({code: ErrorCodes.FAILED_DURING_ASSISTANCE, message: errorMessages.FAILED_DURING_ASSISTANCE });
   }
   c.status(200);
   return c.json({ subtasks: response });

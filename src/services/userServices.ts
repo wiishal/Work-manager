@@ -3,8 +3,9 @@ import { getPrisma } from "../config/prismaClient";
 import { sign, verify } from "hono/jwt";
 import { userCredentials } from "../constants/type";
 import bcrypt from "bcryptjs";
+import { Context } from "hono";
 
-export const checkUser = async (c: any, user_name: string) => {
+export const checkUser = async (c: Context, user_name: string) => {
   try {
     const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
 
@@ -13,7 +14,6 @@ export const checkUser = async (c: any, user_name: string) => {
         username: user_name,
       },
     });
-    console.log(user, "check uer");
     if (user) {
       return { status: true, user };
     }
@@ -23,7 +23,7 @@ export const checkUser = async (c: any, user_name: string) => {
   }
 };
 
-export const createUser = async (c: any, userCredentials: userCredentials) => {
+export const createUser = async (c: Context, userCredentials: userCredentials) => {
   try {
     const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
     const hash = bcrypt.hashSync(userCredentials.password, 10);
@@ -42,14 +42,14 @@ export const createUser = async (c: any, userCredentials: userCredentials) => {
   }
 };
 
-export const signJWT = async (c: any, username: string, userId: number) => {
+export const signJWT = async (c: Context, username: string, userId: number) => {
   const payload = {
     role: "user",
     user: username,
     userId: userId,
   };
   try {
-    const token = await sign(payload, c.env.JWT_SECRET);
+    const token = await sign(payload, c.env.JWT_SECRET,'HS256')
     return token || false;
   } catch (error) {
     return false;
@@ -57,7 +57,7 @@ export const signJWT = async (c: any, username: string, userId: number) => {
 };
 
 export const verifyJWT = async (
-  c: any,
+  c: Context,
   userToken: string
 ): Promise<JWTPayload | boolean> => {
   try {

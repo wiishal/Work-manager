@@ -66,6 +66,20 @@ export async function getTagTask(c:Context,userId:number,tag:string) {
   }
 }
 
+export async function getUserTags(c:Context,userId:number) {
+  const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL)
+  try {
+    const user = await prisma.user.findUnique({
+     where:{
+      id:userId,
+     }
+    })
+    return user?.tags || false
+  } catch (error) {
+    return false
+  }
+}
+
 export async function getListTask(c: Context, userId: number, list: string) {
   const prisma = getPrisma(c.env.PRISMA_ACCELERATE_URL);
   try {
