@@ -78,7 +78,6 @@ taskRoute.put("/toggleStatus", async (c) => {
 
 taskRoute.put("/updateTask", async (c) => {
   const body = await c.req.json();
-  console.log(body);
   const { success } = taskUpdateInputs.safeParse(body.updatedTask);
   if (!success) {
     c.status(403);
@@ -100,7 +99,6 @@ taskRoute.put("/updateTask", async (c) => {
 taskRoute.delete("/deleteTask/:id", async (c) => {
   const id = c.req.param("id");
   const currID = Number(id);
-  console.log(currID, "req for del", currID);
 
   const response = await deleteTask(c, currID);
   if (!response) {

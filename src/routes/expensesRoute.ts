@@ -39,7 +39,6 @@ expensesRoute.get("/", async (c) => {
 expensesRoute.post("/addCard", async (c) => {
   const userId = c.get("userId");
   const body = await c.req.json();
-  console.log(body);
   const { success } = AddNewCardInput.safeParse(body);
   if (!success) {
     c.status(411);

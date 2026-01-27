@@ -12,6 +12,6 @@ export const subtaskAssistanceAiResponse = z.array(
 );
 
 export const subtaskInputs = z.object({
-  taskId: z.number().min(1).max(20),
+  taskId: z.number().min(1),
   detail: z.string(),
 });

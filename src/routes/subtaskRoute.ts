@@ -52,9 +52,7 @@ subtaskRoute.post("/addSubTask", async (c) => {
 });
 
 subtaskRoute.post("/toggleSubtask", async (c) => {
-  console.log('toogle task req')
   const body = await c.req.json();
-  console.log(body)
   const updatedsubTask = await tooggleSubTask(c, body.id);
   if (!updatedsubTask) {
     c.status(404);
@@ -68,10 +66,8 @@ subtaskRoute.post("/toggleSubtask", async (c) => {
 });
 
 subtaskRoute.delete("/deleteSubTask/:id", async (c) => {
-  console.log("id");
   const id = c.req.param("id");
   const currId = Number(id);
-  console.log(currId);
   const res = await deleteSubTask(c, currId);
   if (!res) {
     c.status(403);
@@ -84,7 +80,6 @@ subtaskRoute.delete("/deleteSubTask/:id", async (c) => {
 
 subtaskRoute.post("/assistance", async (c) => {
   const body = await c.req.json();
-  console.log(body);
   const { success } = taskDetailsInputs.safeParse(body);
 
   if (!success) {
